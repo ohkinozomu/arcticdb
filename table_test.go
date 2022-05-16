@@ -100,7 +100,7 @@ func TestTable(t *testing.T) {
 	buf, err := samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	samples = dynparquet.Samples{{
@@ -120,7 +120,7 @@ func TestTable(t *testing.T) {
 	buf, err = samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	samples = dynparquet.Samples{{
@@ -141,7 +141,7 @@ func TestTable(t *testing.T) {
 	buf, err = samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	err = table.Iterator(context.Background(), memory.NewGoAllocator(), nil, nil, nil, func(ar arrow.Record) error {
@@ -217,7 +217,7 @@ func Test_Table_GranuleSplit(t *testing.T) {
 	buf, err := samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	samples = dynparquet.Samples{{
@@ -236,7 +236,7 @@ func Test_Table_GranuleSplit(t *testing.T) {
 	buf, err = samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	samples = dynparquet.Samples{{
@@ -256,7 +256,7 @@ func Test_Table_GranuleSplit(t *testing.T) {
 	buf, err = samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	// Wait for the index to be updated by the asynchronous granule split.
@@ -350,7 +350,7 @@ func Test_Table_InsertLowest(t *testing.T) {
 
 	// Since we are inserting 4 elements and the granule size is 4, the granule
 	// will immediately split.
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	// Since a compaction happens async, it may abort if it runs before the transactions are completed. In that case; we'll manually compact the granule
@@ -380,7 +380,7 @@ func Test_Table_InsertLowest(t *testing.T) {
 	buf, err = samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	// Wait for the index to be updated by the asynchronous granule split.
@@ -406,7 +406,7 @@ func Test_Table_InsertLowest(t *testing.T) {
 	buf, err = samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	// Wait for the index to be updated by the asynchronous granule split.
@@ -480,7 +480,7 @@ func Test_Table_Concurrency(t *testing.T) {
 				go func() {
 					defer wg.Done()
 					for i := 0; i < inserts; i++ {
-						if _, err := table.InsertBuffer(generateRows(rows)); err != nil {
+						if _, err := table.InsertBuffer(context.Background(), generateRows(rows)); err != nil {
 							fmt.Println("Received error on insert: ", err)
 						}
 					}
@@ -650,7 +650,7 @@ func Test_Table_ReadIsolation(t *testing.T) {
 	buf, err := samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	// Perform a new insert that will have a higher tx id
@@ -670,7 +670,7 @@ func Test_Table_ReadIsolation(t *testing.T) {
 	buf, err = samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	table.Sync()
@@ -962,7 +962,7 @@ func Test_Table_Filter(t *testing.T) {
 	buf, err := samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	samples = dynparquet.Samples{{
@@ -982,7 +982,7 @@ func Test_Table_Filter(t *testing.T) {
 	buf, err = samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	samples = dynparquet.Samples{{
@@ -1003,7 +1003,7 @@ func Test_Table_Filter(t *testing.T) {
 	buf, err = samples.ToBuffer(table.Schema())
 	require.NoError(t, err)
 
-	_, err = table.InsertBuffer(buf)
+	_, err = table.InsertBuffer(context.Background(), buf)
 	require.NoError(t, err)
 
 	filterExpr := logicalplan.And( // Filter that excludes the granule
