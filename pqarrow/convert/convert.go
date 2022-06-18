@@ -25,14 +25,10 @@ func ParquetNodeToTypeWithWriterFunc(n parquet.Node) (arrow.DataType, func(b arr
 	t := n.Type()
 	lt := t.LogicalType()
 
-	if lt == nil {
-		return nil, nil, errors.New("unsupported type: " + n.Type().String())
-	}
-
 	switch {
-	case lt.UTF8 != nil:
+	case lt != nil && lt.UTF8 != nil:
 		return &arrow.BinaryType{}, writer.NewBinaryValueWriter, nil
-	case lt.Integer != nil:
+	case lt != nil && lt.Integer != nil:
 		switch lt.Integer.BitWidth {
 		case 64:
 			if lt.Integer.IsSigned {
@@ -42,6 +38,8 @@ func ParquetNodeToTypeWithWriterFunc(n parquet.Node) (arrow.DataType, func(b arr
 		default:
 			return nil, nil, errors.New("unsupported int bit width")
 		}
+	case t == parquet.DoubleType:
+		return &arrow.Float64Type{}, writer.NewDoubleValueWriter, nil
 	default:
 		return nil, nil, errors.New("unsupported type: " + n.Type().String())
 	}

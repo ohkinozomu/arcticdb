@@ -185,6 +185,24 @@ func (w *uint64ValueWriter) WritePage(p parquet.Page) error {
 	return nil
 }
 
+type doubleValueWriter struct {
+	b *array.Float64Builder
+}
+
+func NewDoubleValueWriter(b array.Builder, numValues int) ValueWriter {
+	res := &doubleValueWriter{
+		b: b.(*array.Float64Builder),
+	}
+	return res
+}
+
+func (w *doubleValueWriter) Write(values []parquet.Value) {
+}
+
+func (w *doubleValueWriter) WritePage(p parquet.Page) error {
+	return nil
+}
+
 type repeatedValueWriter struct {
 	b      *array.ListBuilder
 	values ValueWriter

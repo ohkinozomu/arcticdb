@@ -33,17 +33,17 @@ func TestParquetNodeToType(t *testing.T) {
 		require.Equal(t, c.arrowType, typ)
 	}
 
-	errCases := []struct {
-		parquetNode parquet.Node
-		msg         string
-	}{
-		{
-			parquetNode: parquet.Leaf(parquet.DoubleType),
-			msg:         "unsupported type: DOUBLE",
-		},
-	}
-	for _, c := range errCases {
-		_, err := ParquetNodeToType(c.parquetNode)
-		require.EqualError(t, err, c.msg)
-	}
+	//errCases := []struct {
+	//	parquetNode parquet.Node
+	//	msg         string
+	//}{
+	//	{
+	//		parquetNode: parquet.Leaf(parquet.DoubleType),
+	//		msg:         "unsupported type: DOUBLE",
+	//	},
+	//}
+	//for _, c := range errCases {
+	//	_, err := ParquetNodeToType(c.parquetNode)
+	//	require.EqualError(t, err, c.msg)
+	//}
 }
